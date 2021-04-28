@@ -2,10 +2,8 @@
 
 using Microsoft.ML.Data;
 
-namespace ObjectDetectionWPFML.Model
-{
-    public class ModelInput
-    {
+namespace ObjectDetectionWPFML.Model {
+    public class ModelInput {
         [ColumnName("Label"), LoadColumn(0)]
         public string Label { get; set; }
 
