@@ -21,6 +21,10 @@
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter" />
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -119,16 +123,35 @@
                                     Text="Drop Zone (drag and drop image)"
                                     TextWrapping="WrapWithOverflow" />
                             </StackPanel>
-
                             <Image
                                 Grid.Row="1"
-                                Source="D:\Projects_VS\ML.NET project\Boiciuc Cosmin-Ionel (Arhitecturi consacrate pentru retele neurale adanci)\PneumoniaDetectionWPF\TestImages\NORMAL\IM-0001-0001.jpeg"
+                                Source="{Binding FilePath, UpdateSourceTrigger=PropertyChanged}"
                                 Stretch="Uniform" />
-                            <Button
+                            <StackPanel
                                 Grid.Row="2"
-                                Margin="10"
                                 HorizontalAlignment="Center"
-                                Content="Choose pohoto" />
+                                Orientation="Horizontal">
+                                <Button
+                                    Grid.Row="1"
+                                    Margin="10"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Click="ChooseImage_Clicked"
+                                    Content="Choose image" />
+                                <Button
+                                    x:Name="startButton"
+                                    Grid.Row="2"
+                                    Margin="10"
+                                    Click="StartPrediction_Clicked"
+                                    Content="Start prediction" />
+                                <ProgressBar
+                                    x:Name="progressBar"
+                                    IsIndeterminate="True"
+                                    Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                    Visibility="Collapsed"
+                                    Value="0" />
+                            </StackPanel>
+
                         </Grid>
                     </Canvas>
                 </materialDesign:Card>
@@ -142,14 +165,104 @@
                 <TextBlock
                     x:Name="defaultMessage"
                     Margin="10"
-                    Foreground="LightGray"
                     FontSize="18"
-                    FontWeight="Heavy"                    
+                    FontWeight="Heavy"
+                    Foreground="LightGray"
                     Text="No image processed yet" />
-                <StackPanel Margin="10">
-                    <TextBlock Text="Result: NORMAL" />
-                    <TextBlock Text="0.93" />
-                    <TextBlock Text="0.56" />
+                <StackPanel
+                    x:Name="resultMessage"
+                    Margin="10"
+                    Visibility="Collapsed">
+                    <TextBlock FontSize="16" Text="Result: ">
+                        <Run Text="{Binding PredictionResult.Prediction, UpdateSourceTrigger=PropertyChanged}" />
+                    </TextBlock>
+                    <TextBlock FontSize="16" Text="Prediction scores: ">
+                        <Run Text="Normal [" />
+                        <Run Text="{Binding PredictionResult.NormalScore, UpdateSourceTrigger=PropertyChanged}" />
+                        <Run Text="] Pneumonia [" />
+                        <Run Text="{Binding PredictionResult.PneumoniaScore, UpdateSourceTrigger=PropertyChanged}" />
+                        <Run Text="]" />
+                    </TextBlock>
+
+                    <StackPanel Visibility="{Binding PredictionResult.AddedToContinous, Converter={StaticResource boolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock
+                            FontSize="16"
+                            Foreground="LimeGreen"
+                            Text="Image was added to continous learning" />
+                        <TextBlock FontSize="14" Text="Do you want to remove the image from continous learning?" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                x:Name="removeFileButton"
+                                Margin="10"
+                                HorizontalAlignment="Left"
+                                Click="RemoveFile_Clicked">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.3*" />
+                                        <ColumnDefinition Width="0.7*" />
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Kind="Delete" />
+                                    <TextBlock Grid.Column="1" Text="Remove image" />
+                                </Grid>
+                            </Button>
+                            <TextBlock
+                                x:Name="removeScuces"
+                                Margin="10"
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                Foreground="LimeGreen"
+                                Text="Image removed succesfully"
+                                Visibility="Collapsed" />
+                            <TextBlock
+                                x:Name="removeFail"
+                                Margin="10"
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                Foreground="Red"
+                                Text="Failed to remove the image"
+                                Visibility="Collapsed" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding AddFileVisibility, Converter={StaticResource boolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock
+                            FontSize="16"
+                            Foreground="Red"
+                            Text="Image was not added to continous learning" />
+                        <TextBlock FontSize="14" Text="Do you want to add the image to continous learning?" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                x:Name="addFileButton"
+                                Margin="10"
+                                HorizontalAlignment="Left"
+                                Click="AddFile_Clicked">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.3*" />
+                                        <ColumnDefinition Width="0.7*" />
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Kind="Add" />
+                                    <TextBlock Grid.Column="1" Text="Add image" />
+                                </Grid>
+                            </Button>
+                            <TextBlock
+                                x:Name="addScuces"
+                                Margin="10"
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                Foreground="LimeGreen"
+                                Text="Image added succesfully to continous education"
+                                Visibility="Collapsed" />
+                            <TextBlock
+                                x:Name="addFail"
+                                Margin="10"
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                Foreground="Red"
+                                Text="Failed to add the image to continous education"
+                                Visibility="Collapsed" />
+                        </StackPanel>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </materialDesign:Card>

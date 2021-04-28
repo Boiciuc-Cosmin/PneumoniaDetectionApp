@@ -1,42 +1,71 @@
 ﻿using Microsoft.Win32;
-using ObjectDetectionWPFML.Model;
-using System;
+using PneumoniaDetection.Models;
+using PneumoniaDetection.Repository;
+using System.ComponentModel;
+using System.IO;
 using System.Windows;
 
 namespace PneumoniaDetection {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window {
-        public MainWindow() {
-            InitializeComponent();
-        }
+    public partial class MainWindow : Window, INotifyPropertyChanged {
+        private readonly IUploadRepository _uploadRepository;
 
-        private void AddImage_Clicked(object sender, RoutedEventArgs e) {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            string fileName = string.Empty;
-            if (openFileDialog.ShowDialog() == true) {
-                fileName = openFileDialog.FileName;
-                Uri fileUri = new Uri(openFileDialog.FileName);
-                //Image.Source = new BitmapImage(fileUri);
+        #region FileName
+        private string _FileName = string.Empty;
+        public string FilePath {
+            get => _FileName;
+            set {
+                if (_FileName != value) {
+                    _FileName = value;
+                    OnPropertyChanged(nameof(FilePath));
+                }
             }
-            Predict(fileName);
         }
+        #endregion
 
-        private void Predict(string path) {
-            ModelInput sampleData = new ModelInput() {
-                ImageSource = path
-            };
+        #region AddFileVisibility
+        private bool _AddFileVisibility;
+        public bool AddFileVisibility {
+            get => _AddFileVisibility;
+            set {
+                if (_AddFileVisibility != value) {
+                    _AddFileVisibility = value;
+                    OnPropertyChanged(nameof(AddFileVisibility));
+                }
+            }
+        }
+        #endregion
 
-            // Make a single prediction on the sample data and print results
-            var predictionResult = ConsumeModel.Predict(sampleData);
-            //PredictionBox.Text = "Rezultat: " + predictionResult.Prediction;
-            //Score.Text = "Prediction Score:\nNormal [ " + predictionResult.Score[0].ToString() + " ] \nPneumonia [ " + predictionResult.Score[1].ToString() + " ]";
+        #region PredictionResult
+        private ModelResult _PredictionResult;
+        public ModelResult PredictionResult {
+            get => _PredictionResult;
+            set {
+                if (_PredictionResult != value) {
+                    _PredictionResult = value;
+                    OnPropertyChanged(nameof(PredictionResult));
+                }
+            }
+        }
+        #endregion
+
+        public MainWindow(IUploadRepository uploadRepository) {
+            InitializeComponent();
+            startButton.IsEnabled = false;
+            DataContext = this;
+            _uploadRepository = uploadRepository;
+            _PredictionResult = new ModelResult();
         }
 
         private void Canvas_Drop(object sender, DragEventArgs e) {
             if (e.Data.GetDataPresent(DataFormats.FileDrop) && e.Data.GetData(DataFormats.FileDrop) is string[] files) {
-
+                FilePath = files[0];
+                startButton.IsEnabled = !string.IsNullOrEmpty(FilePath);
+                defaultMessage.Visibility = Visibility.Visible;
+                resultMessage.Visibility = Visibility.Collapsed;
+                startButton.IsEnabled = true;
             }
         }
 
@@ -52,6 +81,69 @@ namespace PneumoniaDetection {
         private void ButtonCloseWindow_Click(object sender, RoutedEventArgs e) {
             Close();
         }
+        #endregion
+
+        private void ChooseImage_Clicked(object sender, RoutedEventArgs e) {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true) {
+                FilePath = openFileDialog.FileName;
+                startButton.IsEnabled = !string.IsNullOrEmpty(FilePath);
+                defaultMessage.Visibility = Visibility.Visible;
+                resultMessage.Visibility = Visibility.Collapsed;
+                startButton.IsEnabled = true;
+            }
+        }
+
+        private async void StartPrediction_Clicked(object sender, RoutedEventArgs e) {
+            startButton.IsEnabled = false;
+            progressBar.Visibility = Visibility.Visible;
+
+            PredictionResult = await _uploadRepository.GetPredictionResultAsync(FilePath);
+            AddFileVisibility = !PredictionResult.AddedToContinous;
+
+            removeFileButton.IsEnabled = PredictionResult.AddedToContinous;
+            defaultMessage.Visibility = Visibility.Collapsed;
+            resultMessage.Visibility = Visibility.Visible;
+            progressBar.Visibility = Visibility.Collapsed;
+        }
+
+        private async void RemoveFile_Clicked(object sender, RoutedEventArgs e) {
+            removeFileButton.IsEnabled = false;
+            var result = await _uploadRepository.RemoveFileAsync(Path.GetFileName(PredictionResult.ImagePath));
+            removeFileButton.Visibility = Visibility.Collapsed;
+            if (result) {
+                removeScuces.Visibility = Visibility.Visible;
+            } else {
+                removeFail.Visibility = Visibility.Visible;
+            }
+
+        }
+
+        private async void AddFile_Clicked(object sender, RoutedEventArgs e) {
+            var result = await _uploadRepository.AddFileAsync(FilePath, true, false);
+            addFileButton.Visibility = Visibility.Collapsed;
+            if (result) {
+                addScuces.Visibility = Visibility.Visible;
+            } else {
+                addFail.Visibility = Visibility.Collapsed;
+            }
+        }
+
+
+        #region Property changed
+        /// <summary>
+        /// The event that is fired when any child property changes its value
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
+
+        /// <summary>
+        /// Call this to fire a <see cref="PropertyChanged"/> event
+        /// </summary>
+        /// <param name="name"></param>
+        public void OnPropertyChanged(string name) {
+            PropertyChanged(this, new PropertyChangedEventArgs(name));
+        }
+
         #endregion
     }
 }

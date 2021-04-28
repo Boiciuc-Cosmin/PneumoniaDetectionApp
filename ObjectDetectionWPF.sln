@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PneumoniaDetection", "PneumoniaDetection\PneumoniaDetection.csproj", "{ED22D1E4-BD10-4AC7-9771-AB1C788F211C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PneumoniaDetection.DekstopApp", "PneumoniaDetection\PneumoniaDetection.DekstopApp.csproj", "{ED22D1E4-BD10-4AC7-9771-AB1C788F211C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectDetectionWPFML.Model", "ObjectDetectionWPFML.Model\ObjectDetectionWPFML.Model.csproj", "{8440D0E7-D965-42D3-9711-B28848C58939}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectDetectionWPFML.ConsoleApp", "ObjectDetectionWPFML.ConsoleApp\ObjectDetectionWPFML.ConsoleApp.csproj", "{6DDB25DF-7746-4E5B-B0C3-8802A0F94339}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PneumoniaDetection.Api", "PneumoniaDetection.Api\PneumoniaDetection.Api.csproj", "{063AE20C-D1DB-4C21-99A2-F318945C7E3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PneumoniaDetection.Api", "PneumoniaDetection.Api\PneumoniaDetection.Api.csproj", "{063AE20C-D1DB-4C21-99A2-F318945C7E3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
