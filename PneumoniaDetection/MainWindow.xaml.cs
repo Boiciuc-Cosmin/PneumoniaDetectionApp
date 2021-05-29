@@ -102,6 +102,16 @@ namespace PneumoniaDetection {
             AddFileVisibility = !PredictionResult.AddedToContinous;
 
             removeFileButton.IsEnabled = PredictionResult.AddedToContinous;
+            if (PredictionResult.AddedToContinous) {
+                removeFileButton.Visibility = Visibility.Visible;
+                removeFail.Visibility = Visibility.Collapsed;
+                removeScuces.Visibility = Visibility.Collapsed;
+            } else {
+                addFileButton.Visibility = Visibility.Visible;
+                addScuces.Visibility = Visibility.Collapsed;
+                addFail.Visibility = Visibility.Collapsed;
+            }
+
             defaultMessage.Visibility = Visibility.Collapsed;
             resultMessage.Visibility = Visibility.Visible;
             progressBar.Visibility = Visibility.Collapsed;
@@ -116,7 +126,6 @@ namespace PneumoniaDetection {
             } else {
                 removeFail.Visibility = Visibility.Visible;
             }
-
         }
 
         private async void AddFile_Clicked(object sender, RoutedEventArgs e) {
@@ -124,11 +133,12 @@ namespace PneumoniaDetection {
             addFileButton.Visibility = Visibility.Collapsed;
             if (result) {
                 addScuces.Visibility = Visibility.Visible;
-            } else {
                 addFail.Visibility = Visibility.Collapsed;
+            } else {
+                addScuces.Visibility = Visibility.Collapsed;
+                addFail.Visibility = Visibility.Visible;
             }
         }
-
 
         #region Property changed
         /// <summary>

@@ -28,10 +28,12 @@ namespace PneumoniaDetection.Api.Repository {
                 throw new ArgumentNullException(nameof(formFile));
 
             string imagePath;
+            filePath = await SaveImageAsync(formFile);
             if (pneumonia) {
                 var directory = Directory.CreateDirectory(@"Images/Pneumonia");
                 imagePath = Path.Combine(directory.FullName, Path.GetFileName(filePath));
                 File.Copy(filePath, imagePath);
+                File.Delete(filePath);
                 return true;
             }
 
@@ -39,6 +41,7 @@ namespace PneumoniaDetection.Api.Repository {
                 var directory = Directory.CreateDirectory(@"Images/Normal");
                 imagePath = Path.Combine(directory.FullName, Path.GetFileName(filePath));
                 File.Copy(filePath, imagePath);
+                File.Delete(filePath);
                 return true;
             }
 

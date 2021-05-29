@@ -179,8 +179,10 @@
                     <TextBlock FontSize="16" Text="Prediction scores: ">
                         <Run Text="Normal [" />
                         <Run Text="{Binding PredictionResult.NormalScore, UpdateSourceTrigger=PropertyChanged}" />
+                        <Run Text="%" />
                         <Run Text="] Pneumonia [" />
                         <Run Text="{Binding PredictionResult.PneumoniaScore, UpdateSourceTrigger=PropertyChanged}" />
+                        <Run Text="%" />
                         <Run Text="]" />
                     </TextBlock>
 
@@ -251,7 +253,7 @@
                                 VerticalAlignment="Center"
                                 FontSize="14"
                                 Foreground="LimeGreen"
-                                Text="Image added succesfully to continous education"
+                                Text="Image added succesfully to continous learning"
                                 Visibility="Collapsed" />
                             <TextBlock
                                 x:Name="addFail"

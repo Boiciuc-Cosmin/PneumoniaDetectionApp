@@ -41,7 +41,7 @@ namespace PneumoniaDetection.Repository {
             var content = new MultipartFormDataContent()
             { new StringContent(filePath) };
 
-            var response = await _client.PostAsync(apiPath, content);
+            var response = await _client.PutAsync(apiPath, content);
             return response.IsSuccessStatusCode;
         }
 
