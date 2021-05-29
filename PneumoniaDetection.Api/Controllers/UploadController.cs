@@ -37,7 +37,7 @@ namespace PneumoniaDetection.Api.Controllers {
             };
         }
 
-        [HttpPost("remove")]
+        [HttpPut("remove")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
