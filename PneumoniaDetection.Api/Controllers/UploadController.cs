@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ObjectDetectionWPFML.Model.FileHandler;
 using PneumoniaDetection.Api.Commands;
 using PneumoniaDetection.Api.Commands.Utils;
+using PneumoniaDetection.Api.Worker;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,7 +13,6 @@ namespace PneumoniaDetection.Api.Controllers {
     [Route("api/")]
     public class UploadController : ControllerBase {
         private readonly IMediator _mediator;
-        private string lastImageAdded;
 
         public UploadController(IMediator mediator) {
             _mediator = mediator;
@@ -21,8 +22,7 @@ namespace PneumoniaDetection.Api.Controllers {
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [DisableRequestSizeLimit]
-        public async Task<IActionResult> UploadImage([FromForm] IFormFile file) {
+        public async Task<IActionResult> UploadImage(IFormFile file) {
             if (!HttpContext.Request.Form.Files.Any()) {
                 return BadRequest();
             }
@@ -75,7 +75,13 @@ namespace PneumoniaDetection.Api.Controllers {
                 CommandResult.InternalError => Conflict(),
                 _ => StatusCode(StatusCodes.Status500InternalServerError)
             };
+        }
 
+        [HttpPost("train")]
+        public void TrainModel() {
+            TsvFileHandler test = new TsvFileHandler();
+            test.CreateTsvFile();
+            _ = new BackgroundWorkerModel();
         }
     }
 }

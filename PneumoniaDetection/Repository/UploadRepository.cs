@@ -61,5 +61,10 @@ namespace PneumoniaDetection.Repository {
             var response = await _client.PostAsync(apiPath, multiform);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task TrainModel() {
+            const string apiPath = "api/train";
+            await _client.PostAsync(apiPath, null);
+        }
     }
 }

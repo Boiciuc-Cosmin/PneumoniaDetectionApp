@@ -155,5 +155,9 @@ namespace PneumoniaDetection {
         }
 
         #endregion
+
+        private async void TrainModel_Clicked(object sender, RoutedEventArgs e) {
+            await _uploadRepository.TrainModel();
+        }
     }
 }
