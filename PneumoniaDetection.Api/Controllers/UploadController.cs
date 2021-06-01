@@ -5,6 +5,7 @@ using ObjectDetectionWPFML.Model.FileHandler;
 using PneumoniaDetection.Api.Commands;
 using PneumoniaDetection.Api.Commands.Utils;
 using PneumoniaDetection.Api.Worker;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,9 +14,11 @@ namespace PneumoniaDetection.Api.Controllers {
     [Route("api/")]
     public class UploadController : ControllerBase {
         private readonly IMediator _mediator;
+        private IBackgroundWorkerModel _backgroundWorkerModel;
 
-        public UploadController(IMediator mediator) {
+        public UploadController(IMediator mediator, IBackgroundWorkerModel backgroundWorkerModel) {
             _mediator = mediator;
+            _backgroundWorkerModel = backgroundWorkerModel;
         }
 
         [HttpPost("upload")]
@@ -78,10 +81,21 @@ namespace PneumoniaDetection.Api.Controllers {
         }
 
         [HttpPost("train")]
-        public void TrainModel() {
-            TsvFileHandler test = new TsvFileHandler();
-            test.CreateTsvFile();
-            _ = new BackgroundWorkerModel();
+        public IActionResult TrainModel() {
+            try {
+                TsvFileHandler test = new TsvFileHandler();
+                test.CreateTsvFile();
+                if (_backgroundWorkerModel.IsProcessing) {
+                    return Ok("processing");
+                }
+
+                _backgroundWorkerModel.StartTheProcess();
+            }
+            catch (Exception e) {
+                return Conflict(e.Message);
+            }
+
+            return Ok();
         }
     }
 }

@@ -62,9 +62,11 @@ namespace PneumoniaDetection.Repository {
             return response.IsSuccessStatusCode;
         }
 
-        public async Task TrainModel() {
+        public async Task<bool> TrainModel() {
             const string apiPath = "api/train";
-            await _client.PostAsync(apiPath, null);
+            var result = await _client.PostAsync(apiPath, null);
+
+            return result.IsSuccessStatusCode;
         }
     }
 }

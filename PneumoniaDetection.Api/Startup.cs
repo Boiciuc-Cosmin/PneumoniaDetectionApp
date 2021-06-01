@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using PneumoniaDetection.Api.Commands;
 using PneumoniaDetection.Api.Dtos;
 using PneumoniaDetection.Api.Repository;
+using PneumoniaDetection.Api.Worker;
 
 namespace PneumoniaDetection.Api {
     public class Startup {
@@ -28,6 +29,7 @@ namespace PneumoniaDetection.Api {
 
             services.Configure<ScoresToKeepOptions>(Configuration.GetSection(ScoresToKeepOptions.ScoresToKeep));
 
+            services.AddSingleton<IBackgroundWorkerModel, BackgroundWorkerModel>();
             services.AddTransient<IModelConsumerRepository, ModelConsumerRepository>();
             services.AddTransient<ISaveFileRepository, SaveFileRepository>();
             services.AddTransient<IRemoveFileRepository, RemoveFileRepository>();

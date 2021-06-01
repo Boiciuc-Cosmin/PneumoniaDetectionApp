@@ -3,7 +3,6 @@ using Microsoft.ML.Data;
 using Microsoft.ML.Vision;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace ObjectDetectionWPFML.Model {
@@ -79,7 +78,7 @@ namespace ObjectDetectionWPFML.Model {
         private static void SaveModel(MLContext mlContext, ITransformer mlModel, string modelRelativePath, DataViewSchema modelInputSchema) {
             // Save/persist the trained model to a .ZIP file
             Console.WriteLine($"=============== Saving the model  ===============");
-            mlContext.Model.Save(mlModel, modelInputSchema, Directory.GetCurrentDirectory());
+            mlContext.Model.Save(mlModel, modelInputSchema, modelRelativePath);
         }
 
         public static void PrintMulticlassClassificationMetrics(MulticlassClassificationMetrics metrics) {

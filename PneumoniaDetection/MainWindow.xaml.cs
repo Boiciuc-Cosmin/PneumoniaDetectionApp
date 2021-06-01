@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using PneumoniaDetection.Models;
 using PneumoniaDetection.Repository;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
@@ -110,6 +111,11 @@ namespace PneumoniaDetection {
                 addFileButton.Visibility = Visibility.Visible;
                 addScuces.Visibility = Visibility.Collapsed;
                 addFail.Visibility = Visibility.Collapsed;
+                if (PredictionResult.Prediction.Equals("normal", StringComparison.CurrentCultureIgnoreCase)) {
+                    radioNormal.IsChecked = true;
+                } else {
+                    radioPneumonia.IsChecked = true;
+                }
             }
 
             defaultMessage.Visibility = Visibility.Collapsed;
@@ -129,7 +135,7 @@ namespace PneumoniaDetection {
         }
 
         private async void AddFile_Clicked(object sender, RoutedEventArgs e) {
-            var result = await _uploadRepository.AddFileAsync(FilePath, true, false);
+            var result = await _uploadRepository.AddFileAsync(FilePath, (bool)radioNormal.IsChecked, (bool)radioPneumonia.IsChecked);
             addFileButton.Visibility = Visibility.Collapsed;
             if (result) {
                 addScuces.Visibility = Visibility.Visible;
@@ -157,7 +163,8 @@ namespace PneumoniaDetection {
         #endregion
 
         private async void TrainModel_Clicked(object sender, RoutedEventArgs e) {
-            await _uploadRepository.TrainModel();
+            var result = await _uploadRepository.TrainModel();
+            alertIcon.Visibility = result ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }

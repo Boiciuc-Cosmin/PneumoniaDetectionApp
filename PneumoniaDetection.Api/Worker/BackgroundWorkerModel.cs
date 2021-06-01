@@ -4,14 +4,21 @@ using System.ComponentModel;
 using System.IO;
 
 namespace PneumoniaDetection.Api.Worker {
-    public class BackgroundWorkerModel {
-        private readonly BackgroundWorker backgroundWorker;
+    public class BackgroundWorkerModel : IBackgroundWorkerModel {
+        private BackgroundWorker backgroundWorker;
         private const string tsvFileName = "tsvFile.tsv";
+        public bool IsProcessing { get; set; }
 
-        public BackgroundWorkerModel() {
+        public void StartTheProcess() {
+            IsProcessing = true;
             backgroundWorker = new BackgroundWorker();
             backgroundWorker.DoWork += BackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
             backgroundWorker.RunWorkerAsync();
+        }
+
+        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
+            IsProcessing = false;
         }
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
