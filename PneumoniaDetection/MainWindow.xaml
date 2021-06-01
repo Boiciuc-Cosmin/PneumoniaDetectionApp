@@ -148,7 +148,22 @@
                                         Visibility="Collapsed"
                                         Value="0" />
                                 </StackPanel>
-                                <Button HorizontalAlignment="Right" Content="Train" Click="TrainModel_Clicked" />
+                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                    <materialDesign:PackIcon
+                                        x:Name="alertIcon"
+                                        Width="20"
+                                        Height="20"
+                                        VerticalAlignment="Center"
+                                        Foreground="Yellow"
+                                        Kind="Alert"
+                                        ToolTip="The training process has started"
+                                        Visibility="Collapsed" />
+                                    <Button
+                                        Margin="10,0,0,0"
+                                        Click="TrainModel_Clicked"
+                                        Content="Train" />
+                                </StackPanel>
+
                             </Grid>
 
                         </Grid>
@@ -232,20 +247,31 @@
                             Text="Image was not added to continous learning" />
                         <TextBlock FontSize="14" Text="Do you want to add the image to continous learning?" />
                         <StackPanel Orientation="Horizontal">
-                            <Button
-                                x:Name="addFileButton"
-                                Margin="10"
-                                HorizontalAlignment="Left"
-                                Click="AddFile_Clicked">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="0.3*" />
-                                        <ColumnDefinition Width="0.7*" />
-                                    </Grid.ColumnDefinitions>
-                                    <materialDesign:PackIcon Kind="Add" />
-                                    <TextBlock Grid.Column="1" Text="Add image" />
-                                </Grid>
-                            </Button>
+                            <StackPanel x:Name="addFileButton" Orientation="Horizontal">
+                                <Button
+                                    Margin="10"
+                                    HorizontalAlignment="Left"
+                                    Click="AddFile_Clicked">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0.3*" />
+                                            <ColumnDefinition Width="0.7*" />
+                                        </Grid.ColumnDefinitions>
+                                        <materialDesign:PackIcon Kind="Add" />
+                                        <TextBlock Grid.Column="1" Text="Add image" />
+                                    </Grid>
+                                </Button>
+                                <RadioButton
+                                    x:Name="radioPneumonia"
+                                    Margin="10,0,0,0"
+                                    Content="Pneumonia"
+                                    GroupName="select" />
+                                <RadioButton
+                                    x:Name="radioNormal"
+                                    Margin="10,0,0,0"
+                                    Content="Normal"
+                                    GroupName="select" />
+                            </StackPanel>
                             <TextBlock
                                 x:Name="addScuces"
                                 Margin="10"

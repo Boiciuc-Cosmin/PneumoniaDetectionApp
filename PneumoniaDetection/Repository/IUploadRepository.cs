@@ -6,6 +6,6 @@ namespace PneumoniaDetection.Repository {
         Task<ModelResult> GetPredictionResultAsync(string filePath);
         Task<bool> RemoveFileAsync(string filePath);
         Task<bool> AddFileAsync(string filePath, bool pneumonia, bool normal);
-        Task TrainModel();
+        Task<bool> TrainModel();
     }
 }

@@ -33,7 +33,7 @@ namespace PneumoniaDetection.Api.Commands {
                 return new RemoveImageCommandResult(CommandResult.ValidationError);
             }
 
-            var result = _removeFileRepository.RemoveFile(request.File);
+            var result = await Task.Run(() => _removeFileRepository.RemoveFile(request.File));
 
             if (!result) {
                 return new RemoveImageCommandResult(CommandResult.InternalError);
