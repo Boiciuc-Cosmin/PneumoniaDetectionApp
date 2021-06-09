@@ -57,7 +57,7 @@ namespace PneumoniaDetection.Api.Repository {
             string imagePath = string.Empty;
             var dictionary = new Dictionary<string, bool>();
 
-            switch (model.Prediction.ToLower()) {
+            switch (model.Prediction.ToLower().Trim()) {
                 case "pneumonia":
                     if (model.Score[1] >= scoresToKeep.PneumoniaScore) {
                         var directory = Directory.CreateDirectory(@"Images/Pneumonia");
