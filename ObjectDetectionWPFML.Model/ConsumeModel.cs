@@ -14,6 +14,7 @@ namespace ObjectDetectionWPFML.Model {
         // Method for consuming model in your app
         public static ModelOutput Predict(ModelInput input) {
             ModelOutput result = PredictionEngine.Value.Predict(input);
+            Console.WriteLine($"\n\nPredicted Label value {result.Prediction} \nPredicted Label scores: [{String.Join(",", result.Score)}]\n\n");
             return result;
         }
 

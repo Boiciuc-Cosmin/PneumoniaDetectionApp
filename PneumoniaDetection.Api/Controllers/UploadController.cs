@@ -1,9 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ObjectDetectionWPFML.Model.FileHandler;
 using PneumoniaDetection.Api.Commands;
 using PneumoniaDetection.Api.Commands.Utils;
+using PneumoniaDetection.Api.Dtos;
 using PneumoniaDetection.Api.Worker;
 using System;
 using System.Linq;
@@ -63,14 +65,15 @@ namespace PneumoniaDetection.Api.Controllers {
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddImage([FromForm] IFormFile file, [FromForm] string pneumonia, [FromForm] string normal) {
+        public async Task<IActionResult> AddImage([FromForm] IFormFile file, [FromForm] SelectionDto data) {
             if (!HttpContext.Request.Form.Files.Any()) {
                 return BadRequest();
             }
 
             file = HttpContext.Request.Form.Files.First();
 
-            var result = await _mediator.Send(new AddImageCommand(file, bool.Parse(pneumonia), bool.Parse(normal)));
+            data = JsonConvert.DeserializeObject<SelectionDto>(HttpContext.Request.Form.First().Value);
+            var result = await _mediator.Send(new AddImageCommand(file, (bool)data.Pneumonia, (bool)data.Normal));
 
             return result.Result switch {
                 CommandResult.Succes => Ok(),
