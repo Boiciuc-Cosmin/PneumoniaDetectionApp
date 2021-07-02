@@ -135,7 +135,7 @@ namespace PneumoniaDetection {
         }
 
         private async void AddFile_Clicked(object sender, RoutedEventArgs e) {
-            var result = await _uploadRepository.AddFileAsync(FilePath, (bool)radioNormal.IsChecked, (bool)radioPneumonia.IsChecked);
+            var result = await _uploadRepository.AddFileAsync(FilePath, (bool)radioPneumonia.IsChecked, (bool)radioNormal.IsChecked);
             addFileButton.Visibility = Visibility.Collapsed;
             if (result) {
                 addScuces.Visibility = Visibility.Visible;

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using PneumoniaDetection.DekstopApp.Models;
 using PneumoniaDetection.Models;
 using System;
 using System.IO;
@@ -52,10 +53,11 @@ namespace PneumoniaDetection.Repository {
 
             const string apiPath = "api/add";
             var fileBytes = File.ReadAllBytes(filePath);
+            var x = new SelectionDTO() { Normal = normal, Pneumonia = pneumonia };
+            var data = JsonConvert.SerializeObject(x);
             var multiform = new MultipartFormDataContent() {
                 { new ByteArrayContent(fileBytes), "image", $"{Guid.NewGuid()}{Path.GetExtension(filePath)}" },
-                { new StringContent(pneumonia.ToString()) },
-                { new StringContent(normal.ToString()) }
+                { new StringContent(data) }
             };
 
             var response = await _client.PostAsync(apiPath, multiform);
