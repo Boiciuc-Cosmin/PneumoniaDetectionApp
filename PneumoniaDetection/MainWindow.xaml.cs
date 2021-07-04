@@ -167,4 +167,5 @@ namespace PneumoniaDetection {
             alertIcon.Visibility = result ? Visibility.Visible : Visibility.Collapsed;
         }
     }
+
 }
